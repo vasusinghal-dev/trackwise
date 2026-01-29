@@ -25,7 +25,7 @@ export async function getCloudinarySignature(userId: string) {
   return {
     timestamp,
     signature,
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME!,
-    apiKey: process.env.CLOUDINARY_API_KEY!,
+    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
+    apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!,
   };
 }
