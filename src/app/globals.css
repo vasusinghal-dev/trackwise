@@ -1,6 +1,14 @@
 /* Add to your global CSS file */
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
+
+.debug-border {
+  border: 2px solid red !important;
+}
+
 /* Light Theme - Professional & Productive */
 :root {
   /* Background & Surfaces (60%) */

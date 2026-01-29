@@ -1,7 +1,10 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import SignInForm from "./SignInForm";
-import SocialButtons from "../SocialButtons";
+import SocialButtons from "../social-buttons/SocialButtons";
 import { Lock } from "lucide-react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import ForegetPasswordForm from "../password-reset/ForegetPasswordForm";
 
 type Props = {
   onSwap: () => void;
@@ -11,6 +14,24 @@ const SignInPanel = forwardRef<HTMLDivElement, Props>(function SignInPanel(
   { onSwap },
   ref,
 ) {
+  const [forgotPasswordTab, setForgotPasswordTab] = useState<boolean>(false);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      ".animate-icon",
+      { opacity: 0, scale: 0, rotation: -180 },
+      {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 0.8,
+        delay: 0.5,
+        stagger: 0.2,
+        ease: "elastic.out(1, 0.5)",
+      },
+    );
+  });
+
   return (
     <div
       ref={ref}
@@ -23,37 +44,59 @@ const SignInPanel = forwardRef<HTMLDivElement, Props>(function SignInPanel(
               <Lock className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-3xl font-bold text-text-primary">
-              Welcome Back
+              {forgotPasswordTab ? "Reset Your Password" : "Welcome Back"}
             </h1>
           </div>
           <p className="text-text-secondary">
-            Sign in to your account to continue your journey with us.
+            {forgotPasswordTab
+              ? "Enter your email address and we'll send you a link to reset your password."
+              : "Sign in to your account to continue your journey with us."}
           </p>
         </div>
 
-        <SignInForm />
+        {!forgotPasswordTab ? (
+          <>
+            <SignInForm setForgotPasswordTab={setForgotPasswordTab} />
 
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-background text-text-secondary">
-              Or continue with
-            </span>
-          </div>
-        </div>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-background text-text-secondary">
+                  Or continue with
+                </span>
+              </div>
+            </div>
 
-        <SocialButtons />
+            <SocialButtons />
+          </>
+        ) : (
+          <ForegetPasswordForm />
+        )}
 
         <p className="mt-8 text-center text-text-secondary">
-          Don&apos;t have an account?{" "}
-          <button
-            onClick={onSwap}
-            className="text-primary hover:text-primary-hover font-medium"
-          >
-            Sign up now
-          </button>
+          {forgotPasswordTab ? (
+            <>
+              Remember your password?{" "}
+              <button
+                onClick={() => setForgotPasswordTab(false)}
+                className="text-primary hover:text-primary-hover font-medium cursor-pointer"
+              >
+                Sign in here
+              </button>
+            </>
+          ) : (
+            <>
+              Don&apos;t have an account?{" "}
+              <button
+                onClick={onSwap}
+                className="text-primary hover:text-primary-hover font-medium"
+              >
+                Sign up now
+              </button>
+            </>
+          )}
         </p>
       </div>
     </div>

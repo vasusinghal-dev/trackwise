@@ -44,7 +44,7 @@ export default function DashboardRedirect() {
 
       // Redirect to dashboard after 3 seconds
       const timer = setTimeout(() => {
-        router.push("/dashboard");
+        router.replace("/dashboard");
       }, 3000);
 
       return () => clearTimeout(timer);

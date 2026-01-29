@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import ThemeToggle from "../ui/theme-toggle";
+import ThemeToggle from "../shared-ui/theme-toggle";
 import Link from "next/link";
 
 export default function CTA() {

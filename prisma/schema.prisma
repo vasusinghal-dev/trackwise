@@ -1,0 +1,377 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  applications  Application[]
+  activities    Activity[]
+  reminders     Reminder[]
+  interviews    Interview[]
+  documents     ApplicationDocument[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// Job Applications
+model Application {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Basic Info
+  company           String
+  companyNormalized String?
+  role              String
+  jobPostingUrl     String?
+  description       String?
+  source            Source? // LinkedIn, Company Site, Referral, Email, etc.
+  
+  // Location & Salary
+  location    String?
+  workMode    WorkMode @default(ONSITE)
+  
+  // Salary - structured for analytics
+  salaryMin   Int?
+  salaryMax   Int?
+  currency    String? @db.Char(3) // "INR", "USD", "EUR" - ISO 4217 codes
+  
+  // Status
+  status      ApplicationStatus @default(APPLIED)
+  stage       String?  // e.g., "Phone Screen", "Technical Round", "Final Interview"
+  priority    Priority @default(MEDIUM)
+  
+  // Dates - separate status update timestamp
+  appliedDate      DateTime @default(now())
+  statusUpdatedAt  DateTime @default(now()) // Only updated when status changes
+  deadline         DateTime?
+  nextFollowUp     DateTime?
+  
+  // Contacts
+  recruiterName    String?
+  recruiterEmail   String?
+  hiringManager    String?
+  referralContact  String?
+  
+  // Notes
+  notes       String?
+  
+  // Metadata
+  isArchived  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  activities  Activity[]
+  reminders   Reminder[]
+  interviews  Interview[]
+  documents   ApplicationDocument[]
+  
+  @@index([userId, status])
+  @@index([userId, isArchived])
+  @@index([appliedDate])
+  @@index([company])
+  @@index([statusUpdatedAt])
+  @@index([userId, status, isArchived]) // Composite for common queries
+  @@map("application")
+}
+
+// Activities (timeline events)
+model Activity {
+  id             String      @id @default(uuid())
+  applicationId  String
+  application    Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Activity Details
+  type          ActivityType
+  title         String
+  description   String?
+  
+  // Timestamps - separate occurred vs logged
+  occurredAt    DateTime    @default(now()) // When it actually happened
+  createdAt     DateTime    @default(now()) // When logged in system
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([applicationId])
+  @@index([userId])
+  @@index([occurredAt])
+  @@index([applicationId, occurredAt]) // Timeline performance boost
+  @@index([applicationId, type]) // For filtering by activity type
+  @@map("activity")
+}
+
+// Reminders/Folllow-ups
+model Reminder {
+  id            String        @id @default(uuid())
+  applicationId String
+  application   Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Reminder Details
+  title         String
+  description   String?
+  type          ReminderType @default(FOLLOW_UP_EMAIL)
+  dueDate       DateTime
+  isCompleted   Boolean       @default(false)
+  completedAt   DateTime?     // When marked as completed
+  
+  // Metadata
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  @@index([applicationId])
+  @@index([userId])
+  @@index([dueDate])
+  @@index([isCompleted])
+  @@index([type])
+  @@index([userId, isCompleted, dueDate]) // For dashboard "upcoming" queries
+  @@index([userId, dueDate, isCompleted]) // For upcoming reminders with status
+  @@map("reminder")
+}
+
+// Application Documents (Resume, Cover Letter versions)
+model ApplicationDocument {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Document Details
+  type          DocumentType // RESUME, COVER_LETTER, PORTFOLIO, OTHER
+  fileName      String
+  fileUrl       String
+  fileSize      Int?        // in bytes
+  fileType      String?     // MIME type
+  version       Int         @default(1)
+  isCurrent     Boolean     @default(true) // Is this the current version used?
+  notes         String?
+  
+  // Metadata
+  uploadedAt    DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([applicationId])
+  @@index([userId])
+  @@index([type])
+  @@index([applicationId, type, isCurrent]) // For finding current docs per type
+  @@map("application_document")
+}
+
+// Interview-specific details
+model Interview {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Interview Details
+  round         Int         @default(1)
+  type          InterviewType // PHONE, VIDEO, ONSITE, ASSESSMENT
+  stage         String?     // e.g., "Technical", "Behavioral", "System Design"
+  scheduledAt   DateTime
+  duration      Int?        // in minutes
+  timezone      String?     // e.g., "America/New_York"
+  
+  // Interviewers
+  interviewerName   String?
+  interviewerEmail  String?
+  interviewerRole   String? // e.g., "Hiring Manager", "Engineer", "HR"
+  
+  // Logistics
+  meetingLink   String?
+  meetingId     String?    // For Zoom/Google Meet IDs
+  meetingPasscode String?
+  location      String?    // Physical location for onsite
+  
+  // Preparation & Notes
+  preparationNotes String?
+  interviewNotes   String?   // Notes from during/after interview
+  questionsAsked   String?   // Questions they asked you
+  questionsToAsk   String?   // Questions you plan to ask
+  
+  // Outcome
+  outcome       InterviewOutcome? // PENDING, PASSED, FAILED, CANCELLED
+  feedback      String?
+  rating        Int?        // 1-5 self-rating of how it went
+  
+  // Metadata
+  isCompleted   Boolean     @default(false)
+  completedAt   DateTime?   // When interview actually happened
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([applicationId])
+  @@index([userId])
+  @@index([scheduledAt])
+  @@index([outcome])
+  @@index([applicationId, round]) // For tracking rounds
+  @@index([userId, scheduledAt, isCompleted]) // For upcoming interviews
+  @@map("interview")
+}
+
+// Enums
+enum ApplicationStatus {
+  DRAFT        // Application in progress
+  APPLIED      // Application submitted
+  SCREENING    // Initial screening/phone screen
+  INTERVIEWING // In interview process
+  TECHNICAL    // Technical assessment
+  FINAL_ROUND  // Final interviews
+  OFFER        // Received offer
+  NEGOTIATING  // Negotiating offer
+  ACCEPTED     // Offer accepted
+  REJECTED     // Rejected
+  WITHDRAWN    // Withdrew application
+  GHOSTED      // No response after follow-ups
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum WorkMode {
+  ONSITE
+  HYBRID
+  REMOTE
+}
+
+enum Source {
+  LINKEDIN
+  COMPANY_SITE
+  REFERRAL
+  EMAIL
+  COLD_APPLICATION
+  RECRUITER
+  JOB_BOARD
+  OTHER
+}
+
+enum ActivityType {
+  APPLICATION_SUBMITTED
+  FOLLOW_UP_SENT
+  INTERVIEW_SCHEDULED
+  INTERVIEW_COMPLETED
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+  REJECTION_RECEIVED
+  STATUS_UPDATED
+  NOTE_ADDED
+  DOCUMENT_UPDATED
+  REMINDER_SET
+  SCREENING_COMPLETED
+  TECHNICAL_ASSESSMENT
+  DOCUMENT_UPLOADED
+  INTERVIEW_PREPARED
+  FOLLOW_UP_RECEIVED
+}
+
+enum ReminderType {
+  FOLLOW_UP_EMAIL    // Specific: follow up via email
+  FOLLOW_UP_CALL     // Specific: follow up via call
+  INTERVIEW_PREP     // Prepare for interview
+  INTERVIEW_ATTEND   // Attend interview
+  THANK_YOU_EMAIL    // Send thank you email
+  APPLICATION_SUBMIT // Submit application
+  DOCUMENT_SUBMIT    // Submit documents
+  OFFER_DECISION     // Make offer decision
+  NETWORKING_REACH   // Reach out to contact
+}
+
+enum DocumentType {
+  RESUME
+  COVER_LETTER
+  PORTFOLIO
+  ASSIGNMENT
+  TRANSCRIPT
+  CERTIFICATION
+  REFERENCE
+  OTHER
+}
+
+enum InterviewType {
+  PHONE
+  VIDEO
+  ONSITE
+  ASSESSMENT
+  PANEL
+  COFFEE_CHAT
+}
+
+enum InterviewOutcome {
+  PENDING
+  PASSED
+  FAILED
+  CANCELLED
+  RESCHEDULED
+  NO_SHOW       // Interviewer didn't show up
+}

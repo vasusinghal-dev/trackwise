@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import SignUpForm from "./SignUpForm";
 import { User } from "lucide-react";
-import SocialButtons from "../SocialButtons";
+import SocialButtons from "../social-buttons/SocialButtons";
 
 type Props = {
   onSwap: () => void;
