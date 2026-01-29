@@ -1,5 +1,5 @@
 import { Github, Twitter, Linkedin } from "lucide-react";
-import { HiOutlineLightningBolt } from "react-icons/hi";
+import Image from "next/image";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,9 +10,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <HiOutlineLightningBolt className="w-5 h-5 text-white" />
-              </div>
+              <Image src="/favicon.svg" alt="Favicon" width={35} height={35} />
               <span className="text-xl font-bold text-text-primary">
                 Trackwise
               </span>

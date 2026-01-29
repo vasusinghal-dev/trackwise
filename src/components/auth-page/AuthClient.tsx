@@ -9,7 +9,8 @@ import SignInPanel from "@/src/components/auth-page/SignIn/SignInPanel";
 import SignInContent from "@/src/components/auth-page/SignIn/SignInContent";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { HiOutlineLightningBolt, HiOutlineHome } from "react-icons/hi";
+import { HiOutlineHome } from "react-icons/hi";
+import Image from "next/image";
 
 gsap.registerPlugin(useGSAP);
 
@@ -74,12 +75,15 @@ export default function AuthClient() {
             </div>
 
             {/* Logo */}
-            <div className="w-46 h-13 bg-black/20 flex items-center gap-2 justify-center rounded-lg">
+            <div className="w-46 h-13 bg-black flex items-center gap-2 justify-center rounded-lg">
               <div className="flex items-center gap-2 justify-center group-hover:shadow-xl group-hover:scale-105">
-                <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg  transition-all duration-200">
-                  <HiOutlineLightningBolt className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold text-text-primary bg-background   backdrop-blur-sm px-3 py-1 rounded-lg shadow-sm transition-colors duration-200">
+                <Image
+                  src="/favicon.svg"
+                  alt="Favicon"
+                  width={35}
+                  height={35}
+                />
+                <span className="text-xl font-bold text-black bg-white backdrop-blur-sm px-3 py-1 rounded-lg shadow-sm transition-colors duration-200">
                   Trackwise
                 </span>
               </div>

@@ -10,12 +10,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import ThemeToggle from "../../shared-ui/theme-toggle";
-import { HiOutlineLightningBolt } from "react-icons/hi";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/src/lib/auth/auth-client";
 import { CldImage } from "next-cloudinary";
+import Image from "next/image";
 
 type DropdownOption = "profile" | "logout";
 
@@ -70,9 +70,7 @@ export default function DashboardNavbar() {
             href="/dashboard"
             className="flex items-center space-x-3 cursor-pointer shrink-0"
           >
-            <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
-              <HiOutlineLightningBolt className="w-6 h-6 text-white" />
-            </div>
+            <Image src="/favicon.svg" alt="Favicon" width={35} height={35} />
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold text-text-primary">Trackwise</h1>
               <p className="text-sm text-text-secondary/80">Career Tracker</p>

@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: "Trackwise - Job tracking, without chaos",
   description:
     "A productivity-focused SaaS for serious job seekers to manage applications, interviews, and decisions in one structured system.",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

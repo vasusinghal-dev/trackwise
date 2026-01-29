@@ -65,7 +65,7 @@ export default async function NewApplicationPage() {
           <div className="mt-6 flex flex-wrap gap-4">
             <div className="px-4 py-2 rounded-lg bg-success/10 border border-success/20">
               <span className="text-sm font-medium text-success">
-                💡 Tip: Save as draft if you're still gathering information
+                💡 Tip: Save as draft if you&apos;re still gathering information
               </span>
             </div>
             <div className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20">
@@ -101,14 +101,14 @@ export default async function NewApplicationPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <h4 className="font-medium text-text-primary">
-                What's the difference between draft and submit?
+                What&apos;s the difference between draft and submit?
               </h4>
               <p className="text-sm text-text-secondary">
                 <strong>Draft:</strong> Application is saved privately for you
                 to complete later.
                 <br />
-                <strong>Submit:</strong> Application is marked as "Applied" and
-                added to your active applications.
+                <strong>Submit:</strong> Application is marked as
+                &quot;Applied&quot; and added to your active applications.
               </p>
             </div>
             <div className="space-y-2">

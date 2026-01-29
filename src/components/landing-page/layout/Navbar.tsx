@@ -3,7 +3,7 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "../../shared-ui/theme-toggle";
-import { HiOutlineLightningBolt } from "react-icons/hi";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,9 +14,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <HiOutlineLightningBolt className="w-5 h-5 text-white" />
-            </div>
+            <Image src="/favicon.svg" alt="Favicon" width={35} height={35} />
             <span className="text-xl font-bold text-text-primary">
               Trackwise
             </span>

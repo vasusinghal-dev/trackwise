@@ -1,5 +1,6 @@
 import { Application } from "@prisma/client";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type viewTab = "table" | "card";
 
@@ -13,6 +14,7 @@ export default function ApplicationsHeader({
   onViewChange: (value: viewTab) => void;
 }) {
   const activeApplications = applications.filter((app) => !app.isArchived);
+  const router = useRouter();
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -40,7 +42,10 @@ export default function ApplicationsHeader({
             Cards
           </button>
         </div>
-        <button className="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium flex items-center gap-2 shadow-sm">
+        <button
+          onClick={() => router.push("/dashboard/applications/new")}
+          className="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium flex items-center gap-2 shadow-sm"
+        >
           <Plus className="w-4 h-4" />
           Add Application
         </button>

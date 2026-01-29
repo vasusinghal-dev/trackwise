@@ -8,6 +8,40 @@ It models **real hiring workflows**, not just CRUD screens.
 
 ---
 
+## 📸 Preview
+
+### Welcome
+
+![Welcome Page](screenshots/landing-page.png)
+
+### SignUp
+
+![SignUp Page](screenshots/signup.png)
+
+### Login
+
+![SignIn Page](screenshots/signin.png)
+
+### Dashboard
+
+![Dashboard 1](screenshots/dashboard%201.png)
+
+![Dashboard 2](screenshots/dashboard%202.png)
+
+### Applications
+
+![Applications](screenshots/all-applications.png)
+
+### Add New Application
+
+![Add New Application](screenshots/new-application.png)
+
+### Profile Settings
+
+![Profile Settings](screenshots/profile-settings.png)
+
+---
+
 ## 🎯 What Trackwise Solves
 
 Most job trackers fail because they treat applications as static rows.
