@@ -1,5 +1,5 @@
-import DashboardNavbar from "@/src/components/dashboard/dashboard-layout/DashboardNavbar";
-import DashboardSidebar from "@/src/components/dashboard/dashboard-layout/DashboardSidebar";
+import { DashboardShell } from "@/src/components/dashboard/dashboard-layout/layout/DashboardShell";
+import { SidebarProvider } from "@/src/contexts/SidebarContext";
 
 export default function DashboardLayout({
   children,
@@ -7,13 +7,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background text-text-primary relative">
-      <DashboardNavbar />
-      <DashboardSidebar />
-
-      <div className="md:ml-64 pt-16">
-        <div className="p-6">{children}</div>
-      </div>
-    </div>
+    <SidebarProvider>
+      <DashboardShell>{children}</DashboardShell>
+    </SidebarProvider>
   );
 }

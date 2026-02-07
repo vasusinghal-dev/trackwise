@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import ProfileView from "./ProfileView";
 import ProfileEditForm from "./ProfileEditForm";
-import { monthYearFormat } from "@/src/lib/utils/date";
+import { formatMonthYear } from "@/src/lib/utils/date";
 import { uploadAvatar } from "@/src/lib/utils/profile/uploadAvatar";
 import { updateProfile } from "@/src/lib/utils/profile/updateProfile";
 
@@ -43,7 +43,7 @@ export default function ProfileSection() {
       name: session.user.name,
       email: session.user.email,
       image: session.user.image ?? undefined,
-      memberSince: monthYearFormat(session.user.createdAt),
+      memberSince: formatMonthYear(session.user.createdAt),
     };
   }, [session]);
 

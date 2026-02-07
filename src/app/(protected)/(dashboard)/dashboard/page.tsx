@@ -20,7 +20,7 @@ export default function DashboardPage() {
   if (!applications || !stats) return null;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="mx-10 space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -36,12 +36,6 @@ export default function DashboardPage() {
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
-          </button>
-          <button
-            onClick={() => toast.info("Coming Soon...")}
-            className="px-4 py-2 border border-border rounded-lg hover:bg-surface transition-colors font-medium"
-          >
-            Quick Report
           </button>
         </div>
       </div>

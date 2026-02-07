@@ -75,7 +75,7 @@ export default function AuthClient() {
             </div>
 
             {/* Logo */}
-            <div className="w-46 h-13 bg-black flex items-center gap-2 justify-center rounded-lg">
+            <div className="w-46 h-13 bg-black/10 flex items-center gap-2 justify-center rounded-lg">
               <div className="flex items-center gap-2 justify-center group-hover:shadow-xl group-hover:scale-105">
                 <Image
                   src="/favicon.svg"

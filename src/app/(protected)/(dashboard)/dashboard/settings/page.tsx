@@ -1,11 +1,11 @@
 "use client";
 
-import ProfileHeader from "@/src/components/profile/ProfileHeader";
-import ProfileTabs from "@/src/components/profile/ProfileTabs";
-import ProfileSection from "@/src/components/profile/section/profile-section/ProfileSection";
-import PreferenceSection from "@/src/components/profile/section/PreferenceSection";
+import ProfileHeader from "@/src/components/settings/ProfileHeader";
+import ProfileTabs from "@/src/components/settings/ProfileTabs";
+import ProfileSection from "@/src/components/settings/section/profile-section/ProfileSection";
+import PreferenceSection from "@/src/components/settings/section/PreferenceSection";
 import { useEffect, useRef, useState } from "react";
-import SecuritySection from "@/src/components/profile/section/securtiy-section/SecuritySection";
+import SecuritySection from "@/src/components/settings/section/securtiy-section/SecuritySection";
 import gsap from "gsap";
 
 export type ProfileTab = "profile" | "preferences" | "security";

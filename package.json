@@ -17,6 +17,7 @@
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "better-auth": "^1.4.15",
+    "date-fns": "^4.1.0",
     "gsap": "^3.14.2",
     "lucide-react": "^0.562.0",
     "next": "16.1.3",

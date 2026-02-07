@@ -14,26 +14,56 @@ import {
   MapPin,
   MoreVertical,
   Plus,
+  Trash,
 } from "lucide-react";
-import { WorkModeBadge } from "../../ui/WorkModeBadge";
-import { SourceBadge } from "../../ui/SourceBadge";
+import { WorkModeBadge } from "../ui/WorkModeBadge";
+import { SourceBadge } from "../ui/SourceBadge";
 import { formatDate, formatRelativeDate } from "@/src/lib/utils/date";
-import { StatusBadge } from "@/src/components/shared-ui/badges/StatusBadge";
 import { PriorityBadge } from "@/src/components/shared-ui/badges/PriorityBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getNextAction } from "@/src/lib/utils/applications/nextAction";
+import { StatusBadge } from "../../shared-ui/badges/StatusBadge";
+import ApplicationDeleteModal from "../delete/ApplicationDeleteModal";
+import { useRouter } from "next/navigation";
 
 export default function ApplicationsTable({
-  applications,
+  applications: initialApplications,
   search,
 }: {
   applications: (Application & { interviews: Interview[] })[];
   search: string;
 }) {
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
+  const [appToDelete, setAppToDelete] = useState<string | null>(null);
+  const [applications, setApplications] =
+    useState<(Application & { interviews: Interview[] })[]>();
+  const router = useRouter();
+
+  useEffect(() => {
+    setApplications(initialApplications);
+  }, [initialApplications]);
+
+  if (!applications) return;
+
+  const confirmDelete = (id: string) => {
+    setAppToDelete(id);
+  };
+
+  const handleDeleteSuccess = (deletedId: string) => {
+    setApplications((prev) => prev?.filter((app) => app.id !== deletedId));
+    setAppToDelete(null);
+  };
 
   return (
     <div className="bg-surface border border-border rounded-xl overflow-hidden">
+      {appToDelete && (
+        <ApplicationDeleteModal
+          applicationId={appToDelete}
+          setApplicationId={setAppToDelete}
+          onDeleteSuccess={handleDeleteSuccess}
+        />
+      )}
+
       {/* Table Header */}
       <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-background/50 text-sm font-medium text-text-secondary">
         <div className="col-span-4">Company / Role</div>
@@ -157,7 +187,17 @@ export default function ApplicationsTable({
               {/* Actions */}
               <div className="col-span-2 flex items-center justify-end gap-2">
                 <button
-                  className="p-2 hover:bg-background rounded-lg transition-colors text-text-secondary hover:text-text-primary"
+                  onClick={() => confirmDelete(app.id)}
+                  className="p-2 hover:bg-error/10 rounded-lg transition-colors text-text-secondary hover:text-error"
+                  title="Delete"
+                >
+                  <Trash className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() =>
+                    router.push(`/dashboard/applications/${app.id}/edit`)
+                  }
+                  className="p-2 hover:bg-primary/10 rounded-lg transition-colors text-text-secondary hover:text-primary"
                   title="Edit"
                 >
                   <Edit className="w-4 h-4" />
@@ -167,30 +207,34 @@ export default function ApplicationsTable({
                     onClick={() =>
                       setSelectedApp(app.id === selectedApp ? null : app.id)
                     }
-                    className="p-2 hover:bg-background rounded-lg transition-colors text-text-secondary hover:text-text-primary"
+                    className="p-2 hover:bg-secondary/50 rounded-lg transition-colors text-text-secondary hover:text-text-primary"
                   >
                     <MoreVertical className="w-4 h-4" />
                   </button>
 
                   {selectedApp === app.id && (
                     <div className="absolute right-0 top-full mt-1 w-48 bg-background rounded-lg shadow-lg border border-border z-10">
-                      <button className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary flex items-center gap-2 rounded-t-lg">
+                      <button
+                        onClick={() =>
+                          router.push(`/dashboard/applications/${app.id}`)
+                        }
+                        className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary/10 flex items-center gap-2 rounded-t-lg"
+                      >
                         <Eye className="w-4 h-4" />
                         View Full Details
                       </button>
-                      <button className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary flex items-center gap-2">
-                        <Edit className="w-4 h-4" />
-                        Edit Application
-                      </button>
-                      <button className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary flex items-center gap-2">
+                      <button className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary/10 flex items-center gap-2">
                         <FileText className="w-4 h-4" />
                         Add Document
                       </button>
-                      <button className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary flex items-center gap-2">
+                      <button className="w-full px-4 py-3 text-left text-sm text-text-primary hover:bg-primary/10 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         Schedule Interview
                       </button>
-                      <button className="w-full px-4 py-3 text-left text-sm text-error hover:text-text-primary hover:bg-error flex items-center gap-2 rounded-b-lg">
+                      <button
+                        onClick={() => confirmDelete(app.id)}
+                        className="w-full px-4 py-3 text-left text-sm text-error hover:bg-error/10 flex items-center gap-2 rounded-b-lg"
+                      >
                         <Archive className="w-4 h-4" />
                         Archive Application
                       </button>

@@ -1,4 +1,4 @@
-import { ProfileTab } from "@/src/app/(protected)/(dashboard)/dashboard/profile/page";
+import { ProfileTab } from "@/src/app/(protected)/(dashboard)/dashboard/settings/page";
 import { Settings, Shield, User } from "lucide-react";
 
 type ProfileTabsProps = {

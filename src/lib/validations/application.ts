@@ -66,6 +66,7 @@ export const applicationFormSchema = z
 
     // Notes
     notes: optionalText,
+    isArchived: z.coerce.boolean().default(false),
   })
   .refine(
     (data) =>

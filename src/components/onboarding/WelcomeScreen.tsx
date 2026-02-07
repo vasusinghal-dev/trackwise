@@ -17,6 +17,7 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Staggered animation for elements
       gsap.fromTo(
         titleRef.current,
         { y: 20, opacity: 0 },
@@ -32,7 +33,7 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       gsap.fromTo(
         buttonRef.current,
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.4 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
       );
     }, containerRef);
 
@@ -42,33 +43,67 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col items-center justify-center min-h-screen px-4"
+      className="flex flex-col items-center justify-center min-h-screen px-4 bg-gradient-to-br from-surface to-background"
     >
       <div className="max-w-md w-full text-center">
-        <div className="mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-6">
-            <CheckCircle className="w-10 h-10 text-blue-600" />
+        <div className="mb-10">
+          {/* Animated icon */}
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-primary/10 rounded-full mb-6 relative">
+            <div className="absolute inset-0 bg-primary/5 rounded-full animate-ping"></div>
+            <CheckCircle className="w-12 h-12 text-primary relative z-10" />
           </div>
-          <h1 ref={titleRef} className="text-4xl font-bold text-gray-900 mb-4">
-            Welcome to Trackwise
+
+          {/* Title */}
+          <h1
+            ref={titleRef}
+            className="text-4xl md:text-5xl font-bold text-text-primary mb-4 leading-tight opacity-0"
+          >
+            Welcome to{" "}
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Trackwise
+            </span>
           </h1>
-          <p ref={textRef} className="text-lg text-gray-600 mb-8">
-            Track your job search professionally.
+
+          {/* Subtitle */}
+          <p
+            ref={textRef}
+            className="text-lg text-text-secondary mb-10 opacity-0"
+          >
+            Your professional job search companion
           </p>
         </div>
 
+        {/* Continue button */}
         <button
           ref={buttonRef}
           onClick={onContinue}
-          className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="group w-full py-4 px-6 bg-primary text-white font-semibold rounded-xl hover:bg-primary-hover transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background active:scale-[0.98] shadow-lg hover:shadow-xl  opacity-0"
         >
-          Continue
+          <span className="flex items-center justify-center gap-2">
+            Get Started
+            <svg
+              className="w-5 h-5 transition-transform group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </span>
         </button>
 
-        <div className="mt-8 flex items-center justify-center space-x-2">
-          <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
-          <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-          <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+        {/* Progress indicators */}
+        <div className="mt-12 flex flex-col items-center gap-4">
+          <div className="flex items-center justify-center space-x-3">
+            <div className="w-3 h-3 bg-primary rounded-full"></div>
+            <div className="w-3 h-3 bg-border rounded-full"></div>
+            <div className="w-3 h-3 bg-border rounded-full"></div>
+          </div>
         </div>
       </div>
     </div>

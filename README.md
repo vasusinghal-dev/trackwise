@@ -10,35 +10,51 @@ It models **real hiring workflows**, not just CRUD screens.
 
 ## 📸 Preview
 
-### Welcome
+### 1️⃣ Landing Page
 
-![Welcome Page](screenshots/landing-page.png)
+![Landing Page](screenshots/landing-page.png)
 
-### SignUp
+---
 
-![SignUp Page](screenshots/signup.png)
+### 2️⃣ Authentication
 
-### Login
+![Sign In](screenshots/signin.png)
+![Sign Up](screenshots/signup.png)
 
-![SignIn Page](screenshots/signin.png)
+---
 
-### Dashboard
+### 3️⃣ Onboarding
 
-![Dashboard 1](screenshots/dashboard%201.png)
+![Onboarding Step 1](screenshots/onboarding-1.png)
+![Onboarding Step 2](screenshots/onboarding-2.png)
 
-![Dashboard 2](screenshots/dashboard%202.png)
+---
 
-### Applications
+### 4️⃣ Dashboard
 
-![Applications](screenshots/all-applications.png)
+![Dashboard](screenshots/dashboard.png)
 
-### Add New Application
+---
 
-![Add New Application](screenshots/new-application.png)
+### 5️⃣ Applications
 
-### Profile Settings
+![Applications List](screenshots/applications-list.png)
+![New Application](screenshots/new-application.png)
+![View Application](screenshots/view-application.png)
+
+---
+
+### 6️⃣ Activity Timeline
+
+![Activity Log](screenshots/activity-log.png)
+
+---
+
+### 7️⃣ Settings
 
 ![Profile Settings](screenshots/profile-settings.png)
+![Preferences Settings](screenshots/preferences-settings.png)
+![Security Settings](screenshots/security-settings.png)
 
 ---
 
@@ -48,11 +64,11 @@ Most job trackers fail because they treat applications as static rows.
 
 In reality, a job search is:
 
-- multi-stage
-- time-sensitive
-- action-driven
+- **Multi-stage** — screening, interviews, technical rounds, offers
+- **Time-sensitive** — interviews, deadlines, and follow-ups matter
+- **Action-driven** — every application has a next step
 
-Trackwise is designed to answer one core question:
+Trackwise is designed to answer one question:
 
 > **“What should I do next?”**
 
@@ -60,409 +76,227 @@ Everything else is secondary.
 
 ---
 
-## 🧠 Dashboard Philosophy (V1)
+## 🧠 Dashboard Philosophy
 
 The dashboard has **one job**:
-
-### 👉 Tell the user what needs attention _right now_
+**show what needs attention right now**.
 
 No charts.
 No trends.
 No vanity metrics.
 
----
+### What the Dashboard Shows
 
-### ✅ What the Dashboard Shows
+#### 1️⃣ Today / Upcoming
 
-#### 1️⃣ Today / Upcoming (Top Priority)
+- Interviews scheduled
+- Deadlines approaching
+- Time-sensitive application actions
 
-Actionable items that require attention:
-
-- Interview
-- Follow-up
-- Deadline
-
-Minimal context only:
+Displayed with minimal context:
 
 - Company
 - Role
-- What
-- When (Today / Tomorrow / Date)
+- Action
+- Time (Today / Tomorrow / Date)
 
-If the user knows what to do next, the dashboard succeeds.
+If the user knows their next move, the dashboard succeeds.
 
----
+#### 2️⃣ Pipeline Snapshot
 
-#### 2️⃣ Active Pipeline Snapshot
+A lightweight overview of the current pipeline:
 
-A lightweight overview of where applications stand:
+- Active applications
+- Applications in interviews
+- Offers received
 
-- Applied
-- Interviewing
-- Offer
-
-Each column shows:
-
-- Count
-- Top 3 applications
-
-This is **not** the full pipeline — it’s a preview.
+This is a **summary**, not analytics.
 
 ---
 
-#### 3️⃣ Needs Attention (Optional but Powerful)
-
-Surfaces applications that are going stale:
-
-- Company
-- Role
-- Last activity (X days ago)
-- CTA: _Follow up_
-
-This section makes the app feel **useful**, not decorative.
-
----
-
-### 🚫 What’s Intentionally Missing (for now)
-
-- Charts & analytics
-- Monthly stats
-- Trends
-- Exports
-- Filters
-- Drag & drop
-
-Those come later — when they’re actually earned.
-
----
-
-## ✨ Core Features
+## ✨ Core Features (Live)
 
 ### 🔐 Authentication & Security
 
 - Email & password authentication
 - Google & GitHub OAuth
-- Email verification flow
-- Password reset via secure email links
-- Session-based authentication using **Better Auth**
-- Protected routes with server-side enforcement
+- Email verification
+- Session-based auth with Better Auth
+- Protected routes enforced server-side
+- Rate limiting & bot protection via Arcjet
 
 ---
 
 ### 📋 Application Management
 
-- Track job applications with:
-  - Company
-  - Role
-  - Location
-  - Salary range (min / max / currency)
-  - Source (LinkedIn, referral, recruiter, etc.)
+Full CRUD workflow:
 
-- Draft vs submitted applications
-- Status-based workflow:
-  - Applied → Interviewing → Offer → Accepted / Rejected / Ghosted
+- Add new applications
+- View applications list
+- Search & filter
+- Edit applications
+- View detailed application pages
+- Delete or archive applications
+
+Tracked data includes:
+
+- Company & role
+- Application status & stage
+- Priority
+- Work mode (ONSITE / HYBRID / REMOTE)
+- Salary range
+- Source (LinkedIn, referral, recruiter, etc.)
+- Recruiter & contact details
+- Notes and deadlines
 
 ---
 
-### 🕒 Activity Timeline
+### 🧠 Application Workspace
 
-- Full chronological history per application
-- Tracks:
-  - Submissions
-  - Status changes
-  - Interviews
-  - Follow-ups
+Each application has a dedicated workspace:
 
-- Uses real timestamps (`occurredAt`)
-- Timeline-driven UX instead of derived fields
+- Status, stage, priority badges
+- Job description
+- Contacts
+- Notes
+- Interview list
+- Documents list
+- Activity timeline
+- Quick stats (days active, interviews, activities, documents)
+
+This is where the job search actually happens.
+
+---
+
+### 🕒 Activity Timeline (Source of Truth)
+
+- Global activity log
+- Per-application timelines
+- Chronological, immutable events
+- Real timestamps (`occurredAt`)
+- Grouped by date
+- Filtering & search
+- Pagination (load more)
+- Visual emphasis on key events (interviews, offers)
+
+The UI is driven by events — not derived guesses.
 
 ---
 
 ### 📅 Interviews
 
 - Multiple interview rounds per application
-- Supports:
-  - Phone
-  - Video
-  - Onsite
-  - Panel
-  - Assessment
-
-- Stores:
-  - Notes
-  - Feedback
-  - Outcome
-  - Ratings
-
-- Timezone-safe scheduling
-
----
-
-### ⏰ Reminders & Follow-ups
-
-- Follow-ups, prep tasks, decision reminders
-- Due dates with completion tracking
-- Dashboard-friendly queries:
-  - Upcoming
-  - Overdue
-  - Active
+- Interview types: phone, video, onsite, assessment, panel
+- Scheduling with timezone support
+- Interviewer details
+- Notes, feedback, and self-rating
+- Outcome tracking (pending, passed, failed, cancelled, rescheduled)
 
 ---
 
 ### 📄 Document Management
 
-- Attach resumes, cover letters, assignments, and portfolios
-- Versioned documents
-- Per-application document history
-- Cloud-hosted storage
+- Attach resumes, cover letters, portfolios, assignments
+- Versioned per application
+- Metadata stored (file size, type, upload time)
+- Cloud storage via Cloudinary
 
 ---
 
-## 🧪 Validation & Data Integrity
+## ⏳ Coming Soon (Defined, Not Live Yet)
 
-Trackwise enforces **strict validation at every layer**.
+These exist at the schema/UI level but are **not yet fully implemented**:
 
-- Centralized **Zod** schemas
-- Shared between client forms and server actions
-- HTML-form-safe preprocessing
-- Cross-field validation (e.g. salary min ≤ max)
-- Enum-safe parsing aligned with Prisma
-- Server-side validation before **every** database write
+- Reminders & follow-ups
+- Calendar view
+- Advanced analytics
+- Bulk operations
 
-**Nothing reaches the database without being validated.**
-
-This eliminates silent data corruption and edge-case bugs.
+Features are added intentionally — not dumped.
 
 ---
 
-## ⚙️ Server Actions & Routing Model
+## 🧪 Data Integrity
 
-Trackwise uses **Next.js Server Actions** for all mutations.
-
-- Form submissions handled via server actions
-- Validation and normalization on the server
-- Auth enforced server-side
-- Redirects handled at the server boundary
-
-Benefits:
-
-- No client-side trust assumptions
-- Smaller API surface
-- Predictable data flow
-- Easier long-term maintenance
-
-This is a **server-first architecture**, by design.
+- PostgreSQL + Prisma
+- Normalized relational schema
+- Indexed for dashboard and timeline queries
+- Explicit timestamps (`occurredAt` vs `createdAt`)
+- No silent writes
 
 ---
 
-## 🧭 Navigation & UX Decisions
+## ⚙️ Architecture
 
-- Context-aware sidebar navigation
-- Route-aware active states
-- Clear separation between draft and submitted flows
-- Optimistic feedback with toast notifications
-- Graceful handling of redirects and validation errors
-
-UX mirrors real job-search behavior — not generic dashboards.
-
----
-
-## 🧠 Design Philosophy
-
-Trackwise is built like a production SaaS:
-
-- Explicit over implicit
-- Server-first logic
-- Type safety across layers
-- No silent failures
-- UX driven by real workflows
-
-Nothing here is accidental.
+- Server-first design
+- All mutations via Next.js Server Actions
+- Validation and auth enforced on the server
+- Predictable data flow, minimal API surface
 
 ---
 
 ## 🛠 Tech Stack
 
-### Frontend
+**Frontend**
 
-- **Next.js 16** — App Router, SSR, Server Actions
-- **React 19**
-- **TypeScript 5**
-- **Tailwind CSS 4** + PostCSS
-- **GSAP 3** — micro-interactions
-- **Lucide Icons & HeroIcons**
-- **Sonner** — toast notifications
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS
+- GSAP
 
-### Backend & Data
+**Backend & Data**
 
-- **PostgreSQL** — primary relational datastore
-- **Prisma 7** — type-safe ORM with optimized indexes
-- **Better Auth 1.4** — session-based authentication
-- **Postmark** — transactional email delivery
-- **Cloudinary** — document & asset storage
-
-### Security
-
-- **Arcjet** — rate limiting & bot protection
-- **Zod** — schema validation
-
----
-
-## 🗄 Database Design (High Level)
-
-Trackwise uses a **normalized relational schema** designed around real hiring workflows.
-
-### Core Models
-
-- **User** — account and ownership
-- **Application** — job applications with lifecycle state
-- **Interview** — multi-round interview records
-- **Activity** — immutable event timeline
-- **Reminder** — task-based follow-ups
-- **ApplicationDocument** — resumes, cover letters, assets
-- **Session / Account** — authentication primitives
-
-### Design Highlights
-
-- UTC-based timestamps
-- No redundant derived fields
-- Composite indexes for dashboard queries
-- Cascade deletes for referential integrity
-- Status changes tracked via activities, not timestamps
-
----
-
-## 🎯 Application Status Model
-
-Applications move through a **finite, explicit lifecycle**:
-
-- **DRAFT** — Application in progress
-- **APPLIED** — Submitted
-- **SCREENING** — Initial screening
-- **INTERVIEWING** — Active interviews
-- **TECHNICAL** — Technical assessment
-- **FINAL_ROUND** — Final interviews
-- **OFFER** — Offer received
-- **NEGOTIATING** — Offer negotiation
-- **ACCEPTED** — Accepted
-- **REJECTED** — Rejected
-- **WITHDRAWN** — Withdrawn
-- **GHOSTED** — No response after follow-ups
-
-Statuses are enum-safe and validated at the schema level.
-
----
-
-## 🚀 Getting Started (Local Development)
-
-### Prerequisites
-
-- Node.js **18+**
 - PostgreSQL
+- Prisma
+- Server Actions
 
-### Setup
+**Infra & Services**
 
-Install dependencies:
+- Better Auth
+- Postmark
+- Cloudinary
+- Arcjet
+- Zod
+
+---
+
+## 🚀 Local Development
 
 ```bash
 npm install
-```
-
-Configure environment variables:
-
-```env
-DATABASE_URL=postgresql://...
-GITHUB_CLIENT_ID=...
-GITHUB_CLIENT_SECRET=...
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-POSTMARK_API_TOKEN=...
-CLOUDINARY_CLOUD_NAME=...
-ARCJET_KEY=...
-```
-
-Run migrations:
-
-```bash
 npx prisma migrate dev
-```
-
-Start the dev server:
-
-```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
-
-### Production Build
-
-```bash
-npm run build
-npm start
-```
-
----
-
-## 📁 Project Structure
-
-```txt
-src/
-├── app/
-│   ├── (auth)/              # Authentication flows
-│   ├── (landing)/           # Marketing pages
-│   ├── (protected)/         # Auth-required routes
-│   │   ├── (dashboard)/     # Main dashboard
-│   │   └── (onboarding)/    # First-time setup
-│   └── api/auth/            # Better Auth endpoints
-├── components/
-│   ├── applications/        # Application views & forms
-│   ├── dashboard/           # Dashboard sections
-│   ├── auth-page/           # Auth UI
-│   ├── onboarding/          # Onboarding flow
-│   └── shared-ui/           # Reusable components
-├── lib/
-│   ├── auth/                # Auth config
-│   ├── actions/             # Server actions
-│   ├── config/              # Enum & UI config
-│   ├── validations/         # Zod schemas
-│   └── utils/               # Helpers
-└── prisma/
-    ├── schema.prisma        # Database schema
-    └── migrations/          # Migrations
-```
+App runs at `http://localhost:3000`.
 
 ---
 
 ## 📌 Project Status
 
-**Active development**
+**Active development — v0.1.0**
 
-Planned next:
-
-- Advanced analytics
-- Bulk operations
-- Calendar view
-- Export (CSV / PDF)
-- Smart suggestions based on activity patterns
+Focused on correctness, UX, and real job-search workflows.
 
 ---
 
 ## 🎯 Why Trackwise Exists
 
-Job applications are not a list — they’re a process.
+Job applications aren’t a list.
+They’re a process.
 
 Trackwise exists to:
 
 - Preserve context
 - Surface the next action
-- Prevent missed follow-ups
+- Prevent missed interviews and deadlines
 - Act as a single source of truth during a job search
 
-Built for people who take their careers seriously.
+Built for people who actually want results.
 
 ---
 
 ## 📝 License
 
-Private project.
+Private project. All rights reserved.

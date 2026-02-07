@@ -74,7 +74,7 @@ export default function NeedsAttention({
                         No contact info
                       </span>
                     )}
-                    <button className="px-3 py-1.5 bg-warning/10 text-warning rounded-lg hover:bg-warning/20 transition-colors text-sm font-medium">
+                    <button className="px-3 py-1.5 bg-secondary/10 text-success rounded-lg hover:bg-warning/20 transition-colors text-sm font-medium">
                       Update Status
                     </button>
                   </div>

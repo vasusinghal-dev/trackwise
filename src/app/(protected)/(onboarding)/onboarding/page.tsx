@@ -1,4 +1,3 @@
-// app/onboarding/page.tsx
 "use client";
 
 import AddApplicationScreen from "@/src/components/onboarding/AddApplicationScreen";

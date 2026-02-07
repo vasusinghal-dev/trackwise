@@ -1,93 +1,66 @@
-export function monthYearFormat(date: string | Date) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-}
+import {
+  differenceInCalendarDays,
+  format,
+  formatDistanceToNow,
+  isThisWeek,
+  isToday,
+  isYesterday,
+  parseISO,
+} from "date-fns";
 
-export function formatLastLogin(date: Date) {
-  const now = new Date();
-
-  const startOfToday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-  );
-
-  const startOfYesterday = new Date(startOfToday);
-  startOfYesterday.setDate(startOfYesterday.getDate() - 1);
-
-  if (date >= startOfToday) {
-    return `Today, ${date.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit",
-    })}`;
-  }
-
-  if (date >= startOfYesterday) {
-    return `Yesterday, ${date.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit",
-    })}`;
-  }
-
-  return date.toLocaleString([], {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+export function formatMonthYear(date: string | Date) {
+  return format(new Date(date), "MMMM yyyy");
 }
 
 export const formatDate = (date: Date) => {
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return format(new Date(date), "MMM d, yyyy");
 };
 
+export function formatDateHeader(dateString: string) {
+  const date = parseISO(dateString);
+
+  if (isToday(date)) return "Today";
+  if (isYesterday(date)) return "Yesterday";
+  if (isThisWeek(date)) return format(date, "EEEE");
+
+  return format(date, "MMMM d, yyyy");
+}
+
+export function formatLastLogin(date: Date) {
+  return formatRelativeDateTime(date);
+}
+
+export function formatRelativeTime(date: Date) {
+  return formatDistanceToNow(date, { addSuffix: true });
+}
+
 export const formatRelativeDate = (date: Date) => {
-  const DAY = 1000 * 60 * 60 * 24;
+  const diff = differenceInCalendarDays(date, new Date());
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Tomorrow";
+  if (diff === -1) return "Yesterday";
+  if (diff < 0) return `${Math.abs(diff)} days ago`;
 
-  const target = new Date(date);
-  target.setHours(0, 0, 0, 0);
-
-  const diffDays = Math.round((target.getTime() - today.getTime()) / DAY);
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Tomorrow";
-  if (diffDays === -1) return "Yesterday";
-  if (diffDays < 0) return `${Math.abs(diffDays)} days ago`;
-  return `In ${diffDays} days`;
+  return `In ${diff} days`;
 };
 
 export const formatRelativeDateTime = (date: Date) => {
-  const DAY = 1000 * 60 * 60 * 24;
+  const diff = differenceInCalendarDays(date, new Date());
+  const time = format(date, "hh:mm a");
 
-  const now = new Date();
-  const today = new Date(now);
-  today.setHours(0, 0, 0, 0);
+  if (diff === 0) return `Today, ${time}`;
+  if (diff === -1) return `Yesterday, ${time}`;
+  if (diff === 1) return `Tomorrow, ${time}`;
+  if (diff < 0) return `${Math.abs(diff)} days ago`;
 
-  const target = new Date(date);
-  const targetDay = new Date(target);
-  targetDay.setHours(0, 0, 0, 0);
-
-  const diffDays = Math.floor((targetDay.getTime() - today.getTime()) / DAY);
-
-  const time = target.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  if (diffDays === 0) return `Today, ${time}`;
-  if (diffDays === -1) return `Yesterday, ${time}`;
-  if (diffDays < 0) return `${Math.abs(diffDays)} days ago`;
-  if (diffDays === 1) return `Tomorrow, ${time}`;
-
-  return `In ${diffDays} days`;
+  return `In ${diff} days`;
 };
+
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
